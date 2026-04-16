@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cosmos Policy - 论文调研幻灯片</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+    :root {
+        --primary-color: #1a237e;
+        --secondary-color: #3949ab;
+        --accent-color: #ff6f00;
+        --accent-light: #ffb74d;
+        --text-dark: #212121;
+        --text-light: #ffffff;
+        --bg-light: #f5f7fa;
+        --bg-gray: #f0f2f5;
+        --border-radius-card: 16px;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+        --shadow-md: 0 8px 20px rgba(0,0,0,0.08);
+        font-size: 16px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+        background-color: #e8eaed;
+        color: var(--text-dark);
+        line-height: 1.5;
+    }
+
+    .slides {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        padding: 32px 0;
+    }
+
+    .slide {
+        width: 1280px;
+        min-height: 720px;
+        background-color: white;
+        box-shadow: var(--shadow-md);
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s;
+    }
+
+    .slide:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    }
+
+    /* 页眉 */
+    .header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 16px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 70px;
+    }
+
+    .logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    /* 公用组件 */
+    .badge {
+        background-color: var(--accent-color);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 24px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .subtitle {
+        font-size: 15px;
+        color: #5a6e8a;
+    }
+
+    .card {
+        background: white;
+        padding: 24px;
+        border-radius: var(--border-radius-card);
+        box-shadow: var(--shadow-sm);
+        border-left: 4px solid var(--primary-color);
+        transition: all 0.2s;
+    }
+
+    .card:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    .card-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .card-title i {
+        color: var(--accent-color);
+        font-size: 28px;
+    }
+
+    .footer-line {
+        height: 5px;
+        background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+        width: 100%;
+        margin-top: auto;
+    }
+
+    .image-container {
+        width: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f0f2f5;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .image-container img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+    }
+
+    .image-caption {
+        font-size: 13px;
+        color: #5a6e8a;
+        text-align: center;
+        margin-top: 8px;
+    }
+
+    /* ========== SLIDE 03 ========== */
+    .slide-03 .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 36px 44px;
+        gap: 32px;
+    }
+
+    .slide-03 .title-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 24px;
+        border-bottom: 2px solid #edf2f7;
+        padding-bottom: 24px;
+    }
+
+    .slide-03 .paper-info h1 {
+        font-size: 34px;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        letter-spacing: -0.3px;
+    }
+
+    .slide-03 .paper-meta {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .slide-03 .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 32px;
+    }
+
+    .slide-03 .highlight-box {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        padding: 28px;
+        border-radius: var(--border-radius-card);
+        color: white;
+    }
+
+    .slide-03 .highlight-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        line-height: 1.4;
+    }
+
+    .slide-03 .highlight-title i {
+        color: var(--accent-light);
+        font-size: 28px;
+    }
+
+    .slide-03 .insight-content {
+        font-size: 17px;
+        line-height: 1.6;
+    }
+
+    .slide-03 .insight-item {
+        margin-bottom: 18px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .slide-03 .insight-item i {
+        color: var(--accent-light);
+        font-size: 22px;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+    /* ========== SLIDE 04 (新设计) ========== */
+    .slide-04 .main-content {
+        flex: 1;
+        display: flex;
+        padding: 30px 40px;
+        gap: 32px;
+    }
+
+    .slide-04 .left-panel {
+        width: 48%;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;  /* 减小卡片间距 */
+    }
+
+    .slide-04 .right-panel {
+        width: 52%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .slide-04 .page-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 4px;
+    }
+
+    .slide-04 .page-title i {
+        color: var(--accent-color);
+        font-size: 34px;
+    }
+
+    /* 紧凑色块卡片 - 块小 */
+    .tech-block {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 14px 18px;  /* 减小内边距，让块更紧凑 */
+        box-shadow: var(--shadow-sm);
+        border: 1px solid #e2e9f2;
+        transition: all 0.2s;
+        border-left: 5px solid var(--accent-color);
+    }
+
+    .tech-block:hover {
+        box-shadow: var(--shadow-md);
+        border-color: #bdd3e8;
+    }
+
+    .block-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;  /* 减小底部间距 */
+    }
+
+    .block-icon {
+        color: var(--primary-color);
+        font-size: 28px;  /* 图标稍小 */
+        background: #e9eef4;
+        border-radius: 14px;
+        padding: 5px;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .block-title {
+        font-weight: 700;
+        font-size: 17px;  /* 标题字体稍大 */
+        background: var(--primary-color);
+        color: white;
+        padding: 5px 16px;
+        border-radius: 40px;
+        letter-spacing: 0.3px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        display: inline-block;
+    }
+
+    /* 内联模型标签 - 在标题右侧 */
+    .model-inline-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #2a5c8f, #1e4a76);
+        color: white;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 4px 14px;
+        border-radius: 24px;
+        margin-left: 10px;
+        letter-spacing: -0.2px;
+        box-shadow: 0 2px 4px rgba(0, 20, 40, 0.1);
+        border: 1px solid #3a7bb5;
+        vertical-align: middle;
+    }
+
+    .main-desc {
+        font-size: 16px;  /* 字体增大 */
+        color: #1e2e3c;
+        margin-bottom: 10px;
+        line-height: 1.5;
+        padding-left: 6px;
+        font-weight: 500;
+    }
+
+    .sub-point-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;  /* 减小间距 */
+        margin-top: 4px;
+        padding-left: 6px;
+    }
+
+    .sub-point {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        background: #f6faff;
+        padding: 8px 14px;  /* 稍微减小内边距 */
+        border-radius: 16px;
+        border-left: 4px solid #4f7ea0;
+        font-size: 15px;  /* 字体增大 */
+        color: #2c4053;
+        line-height: 1.45;
+    }
+
+    .sub-point i {
+        font-size: 18px;
+        color: var(--accent-color);
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .sub-point strong {
+        color: #0f2a3f;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    /* 特殊处理：stage-header 用于模型名称行 */
+    .stage-header {
+        margin-bottom: 10px;
+        padding-left: 6px;
+    }
+
+    .stage-title {
+        font-size: 16px;
+        color: #1e3a5f;
+    }
+
+    .stage-title strong {
+        background: linear-gradient(135deg, #2a5c8f, #1e4a76);
+        color: white;
+        padding: 3px 14px;
+        border-radius: 24px;
+        font-weight: 600;
+        margin-right: 6px;
+        font-size: 15px;
+    }
+
+    /* 模型高亮 */
+    .model-highlight {
+        background: #e1ebf5;
+        padding: 2px 10px;
+        border-radius: 24px;
+        font-weight: 600;
+        color: #003057;
+    }
+
+    /* 图片区域保持原有 */
+    .slide-04 .image-caption {
+        font-size: 13px;
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 900px) {
+        .slide-04 .left-panel {
+            gap: 12px;
+        }
+        .tech-block {
+            padding: 12px 16px;
+        }
+    }
+
+    /* ========== SLIDE 05 保留原有样式 ========== */
+    .slide-05 .main-content {
+        flex: 1;
+        display: flex;
+        padding: 32px 40px;
+        gap: 32px;
+    }
+
+    .slide-05 .left-panel {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .slide-05 .right-panel {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .slide-05 .section-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .slide-05 .section-title i {
+        color: var(--accent-color);
+        font-size: 28px;
+    }
+
+    .slide-05 .card.libero {
+        border-left-color: var(--primary-color);
+    }
+
+    .slide-05 .card.robocasa {
+        border-left-color: #2e7d32;
+    }
+
+    .slide-05 .card.aloha {
+        border-left-color: #bf6f42;
+    }
+
+    .slide-05 .stat-item {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #edf2f7;
+    }
+
+    .slide-05 .stat-item:last-child {
+        border-bottom: none;
+    }
+
+    .slide-05 .stat-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .slide-05 .stat-value {
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--text-dark);
+    }
+
+    .metric-chip {
+        background: #e8f5e9;
+        color: #2e7d32;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+    .slide-05 .highlight {
+        background: #fff3e0;
+        padding: 12px 16px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 12px 0;
+    }
+
+    .slide-05 .result-badge {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--accent-color);
+    }
+
+    .slide-05 .result-text {
+        font-size: 12px;
+        font-weight: 700;
+        color: #b45f2b;
+        text-align: right;
+    }
+
+    .slide-05 .compare-list {
+        padding-left: 20px;
+        font-size: 12px;
+        line-height: 1.6;
+        color: #4a5568;
+    }
+
+    .slide-05 .task-tag {
+        background: #f1f5f9;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+        margin-right: 6px;
+        margin-bottom: 6px;
+    }
+
+    .slide-05 .score-highlight {
+        color: var(--accent-color);
+        font-weight: 800;
+    }
+
+    .slide-05 .realworld-stats {
+        background: #fef7e0;
+        padding: 14px;
+        border-radius: 12px;
+        border-left: 4px solid var(--accent-color);
+        font-size: 12px;
+        line-height: 1.6;
+        margin-top: 12px;
+    }
+
+    .slide-05 .benchmark-images {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .slide-05 .benchmark-figure {
+        margin: 0;
+    }
+
+    .slide-05 .benchmark-figure .image-container img {
+        height: 160px;
+        object-fit: cover;
+    }
+
+    .card-header {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--primary-color);
+    }
+
+    hr {
+        margin: 12px 0;
+        border: none;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    /* 响应式 */
+    @media (max-width: 1320px) {
+        .slide {
+            width: 95%;
+            margin: 0 auto;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .slide-03 .content-grid,
+        .slide-04 .main-content,
+        .slide-05 .main-content {
+            flex-direction: column;
+            grid-template-columns: 1fr;
+        }
+        .slide-04 .left-panel,
+        .slide-04 .right-panel,
+        .slide-05 .left-panel,
+        .slide-05 .right-panel {
+            width: 100%;
+        }
+        .slide-05 .benchmark-images {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media print {
+        body {
+            background: white;
+        }
+        .slides {
+            gap: 0;
+            padding: 0;
+        }
+        .slide {
+            box-shadow: none;
+            border-radius: 0;
+            page-break-after: always;
+            break-after: page;
+        }
+        .slide:hover {
+            transform: none;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="slides">
+
+<!-- ==================== SLIDE 03 (保持不变) ==================== -->
+<section class="slide slide-03">
+    <div class="header">
+        <div class="logo-text">Video Action Model 调研</div>
+        <div style="font-size: 14px; opacity: 0.8;">03</div>
+    </div>
+
+    <div class="main-content">
+        <div class="title-section">
+            <div class="paper-info">
+                <h1>Cosmos Policy - Adapting Video Model for Control & Planning</h1>
+                <div class="paper-meta">
+                    <span class="badge">ICLR 2026</span>
+                    <span class="subtitle">NVIDIA Research / Stanford University</span>
+                </div>
+            </div>
+            <div class="arxiv-ref" style="background: #f1f5f9; padding: 6px 16px; border-radius: 40px; font-size: 14px; font-family: monospace;">
+                <a href="https://arxiv.org/pdf/2601.16163" class="link-text">arXiv:2601.16163</a>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">
+                    <i class="material-icons">report_problem</i>
+                    现有方法的问题
+                </div>
+                <ul class="problem-list" style="list-style: none; display: flex; flex-direction: column; gap: 20px;">
+                    <li class="problem-item" style="display: flex; align-items: flex-start; gap: 12px;">
+                        <span class="material-icons problem-icon" style="color: #c62828;">close</span>
+                        <div><strong>现有视频模型适配机器人复杂性较高：</strong>需要多阶段训练、新增动作头、自定义架构，工程复杂、难以复现</div>
+                    </li>
+                    <li class="problem-item" style="display: flex; align-items: flex-start; gap: 12px;">
+                        <span class="material-icons problem-icon" style="color: #c62828;">close</span>
+                        <div><strong>VLA模型缺乏动态先验：</strong>基于静态图像-文本预训练，缺乏对时序、运动、物理动力学的理解，在高精度/多模态任务中容易失效</div>
+                    </li>
+                    <li class="problem-item" style="display: flex; align-items: flex-start; gap: 12px;">
+                        <span class="material-icons problem-icon" style="color: #c62828;">close</span>
+                        <div><strong>缺乏统一的训练与规划框架：</strong>世界模型、价值函数和策略通常是分离的模块，训练复杂且不易复用预训练模型</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">
+                    <i class="material-icons">emoji_objects</i>
+                    核心创新：单阶段微调预训练视频模型
+                </div>
+                <div class="insight-content">
+                    <div class="insight-item">
+                        <i class="material-icons">check_circle</i>
+                        <div><strong>潜帧注入：</strong>将机器人状态、动作、价值等<strong>非图像模态编码为latent frame</strong>，直接插入视频模型的潜序列中，不修改模型架构</div>
+                    </div>
+                    <div class="insight-item">
+                        <i class="material-icons">check_circle</i>
+                        <div><strong>统一联合训练目标：</strong>同时训练策略、世界模型和价值函数，使用辅助目标，提升性能</div>
+                    </div>
+                    <div class="insight-item">
+                        <i class="material-icons">check_circle</i>
+                        <div><strong>基于模型的规划：</strong>利用微调后的世界模型和价值函数，通过Best-of-N采样和集成预测选择最优动作</div>
+                    </div>
+                    <div class="insight-item">
+                        <i class="material-icons">check_circle</i>
+                        <div><strong>从回滚数据中学习：</strong>利用策略部署中收集的成功/失败轨迹，仅微调世界模型和价值函数，提升预测准确性</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-line"></div>
+</section>
+
+<!-- ==================== SLIDE 04 (重新设计：四个独立色块，细分点) ==================== -->
+<section class="slide slide-04">
+    <div class="header">
+        <div class="logo-text">Video Action Model 调研</div>
+        <div style="font-size: 14px; opacity: 0.8;">04</div>
+    </div>
+
+    <div class="main-content">
+        <div class="left-panel">
+            <div class="page-title">
+                <i class="material-icons">settings</i>
+                单阶段微调预训练视频模型
+            </div>
+
+            <!-- 卡片1：基础模型 - 模型名称在标题右侧 -->
+            <div class="tech-block">
+                <div class="block-header">
+                    <span class="material-icons block-icon">foundation</span>
+                    <span class="block-title">基础模型预训练</span>
+                    <span class="model-inline-badge">Cosmos-Predict2-2B-Video2World</span>
+                </div>
+                <div class="sub-point-list">
+                    <div class="sub-point">
+                        <i class="material-icons">movie_filter</i>
+                        <span><strong>基于Wan2.1时空VAE</strong> 与 <strong>EDM去噪训练</strong></span>
+                    </div>
+                    <div class="sub-point">
+                        <i class="material-icons">psychology</i>
+                        <span>2B参数视频基础模型，强大的时空先验信息</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 卡片2：潜帧编码 -->
+            <div class="tech-block">
+                <div class="block-header">
+                    <span class="material-icons block-icon">layers</span>
+                    <span class="block-title">潜帧编码 · 多模态注入</span>
+                </div>
+                <div class="main-desc">
+                    输入多视角图像、本体感知、任务描述，构造潜帧序列
+                </div>
+                <div class="sub-point-list">
+                    <div class="sub-point">
+                        <i class="material-icons">timeline</i>
+                        <span><strong>当前状态 → 动作 → 未来状态 → 价值</strong></span>
+                    </div>
+                    <div class="sub-point">
+                        <i class="material-icons">fit_screen</i>
+                        <span>非图像数据归一化后复制填充至潜帧尺寸</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 卡片3：联合训练 -->
+            <div class="tech-block">
+                <div class="block-header">
+                    <span class="material-icons block-icon">sync_alt</span>
+                    <span class="block-title">联合训练 · 扩散损失</span>
+                </div>
+                <div class="main-desc">
+                    <strong>采样比例 50% / 25% / 25%</strong> — 策略 · 世界模型 · 价值函数
+                </div>
+                <div class="sub-point-list">
+                    <div class="sub-point">
+                        <i class="material-icons">pie_chart</i>
+                        <span><strong>50% 策略 · 25% 世界模型 · 25% 价值</strong></span>
+                    </div>
+                    <div class="sub-point">
+                        <i class="material-icons">mask</i>
+                        <span>三者共享EDM扩散损失，通过条件掩码切换预测目标</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 卡片4：策略部署 -->
+            <div class="tech-block">
+                <div class="block-header">
+                    <span class="material-icons block-icon">play_circle</span>
+                    <span class="block-title">策略部署 · 搜索择优</span>
+                </div>
+                <div class="main-desc">
+                    直接策略并行生成动作/状态/价值；规划策略利用未来状态与价值搜索更优动作。
+                </div>
+                <div class="sub-point-list">
+                    <div class="sub-point">
+                        <i class="material-icons">looks_one</i>
+                        <span><strong>Best-of-N采样 (N=8)</strong></span>
+                    </div>
+                    <div class="sub-point">
+                        <i class="material-icons">group_work</i>
+                        <span><strong>集成预测 (3+5次查询)</strong> 择优执行</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="image-container">
+                <img src="https://imgur.com/a/VyOAYcL" alt="Cosmos Policy Architecture"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div style="display: none; background: linear-gradient(145deg, #dbe6f2, #cbd8e8); height: 160px; border-radius: 20px; align-items: center; justify-content: center; color: #1e3f60; font-weight: 500;">
+                    <div style="text-align: center;"><i class="material-icons" style="font-size: 48px;">account_tree</i><br>Cosmos Policy 架构图</div>
+                </div>
+            </div>
+            <div class="image-caption">
+                图：Cosmos Policy基础框架 — 单阶段微调预训练视频模型
+            </div>
+
+            <div class="image-container">
+                <img src="https://imgur.com/a/VyOAYcL" alt="Latent diffusion sequence"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div style="display: none; background: linear-gradient(145deg, #dbe6f2, #cbd8e8); height: 160px; border-radius: 20px; align-items: center; justify-content: center; color: #1e3f60;">
+                    <div style="text-align: center;"><i class="material-icons" style="font-size: 48px;">timeline</i><br>Latent 扩散序列</div>
+                </div>
+            </div>
+            <div class="image-caption">
+                图：Cosmos Policy的latent扩散序列，将非图像模态编码为潜帧
+            </div>
+        </div>
+    </div>
+    <div class="footer-line"></div>
+</section>
+<!-- ==================== SLIDE 05 (保持不变) ==================== -->
+<section class="slide slide-05">
+    <div class="header">
+        <div class="logo-text">Video Action Model 调研</div>
+        <div style="font-size: 14px; opacity: 0.8;">05</div>
+    </div>
+
+    <div class="main-content">
+        <!-- 左侧：仿真实验 -->
+        <div class="left-panel">
+            <div class="section-title">
+                <i class="material-icons">emoji_events</i>
+                仿真环境基准测试
+            </div>
+
+            <!-- LIBERO 卡片 -->
+            <div class="card libero">
+                <div class="card-header">📚 LIBERO 基准测试</div>
+                <div class="stat-item">
+                    <div class="stat-label">🎯 任务套件</div>
+                    <div class="stat-value"><strong>Spatial · Object · Goal · Long</strong> — 共10任务，每任务50个演示</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">⚙️ 评估指标</div>
+                    <div class="stat-value">成功率 (Success Rate)<br><span class="metric-chip">500次试验/套件</span> × <span class="metric-chip">3随机种子</span> = 6,000次总试验</div>
+                </div>
+                <div class="highlight">
+                    <div class="result-badge">98.5%</div>
+                    <div class="result-text">平均成功率 · 新SOTA</div>
+                </div>
+                <div>
+                    <div class="stat-label">🏆 超越对比方法</div>
+                    <ul class="compare-list">
+                        <li>Diffusion Policy · π0.5 / π0 · OpenVLA-OFT</li>
+                        <li>CogVLA · UniVLA · Video Policy · UVA</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 两张仿真结果图 -->
+            <div class="benchmark-images">
+                <figure class="benchmark-figure">
+                    <div class="image-container">
+                        <img src="https://sfile.chatglm.cn/images-ppt/e50c4eec82fe.png" alt="LIBERO结果">
+                    </div>
+                    <figcaption class="image-caption">LIBERO基准测试结果</figcaption>
+                </figure>
+                <figure class="benchmark-figure">
+                    <div class="image-container">
+                        <img src="https://sfile.chatglm.cn/images-ppt/e50c4eec82fe.png" alt="RoboCasa结果">
+                    </div>
+                    <figcaption class="image-caption">RoboCasa基准测试结果</figcaption>
+                </figure>
+            </div>
+
+            <!-- RoboCasa 卡片 -->
+            <div class="card robocasa">
+                <div class="card-header">🏠 RoboCasa 基准测试</div>
+                <div class="stat-item">
+                    <div class="stat-label">🍳 任务套件</div>
+                    <div class="stat-value"><strong>24个厨房操作任务</strong> — 多样橱柜、炉灶、物品布局</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">📊 训练数据</div>
+                    <div class="stat-value">✅ 仅使用 <strong>50个人工演示/任务</strong> (对比方法用300~3000个演示)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">🔁 评估规模</div>
+                    <div class="stat-value">每任务50次试验 × 3随机种子 = <strong>3,600次总试验</strong></div>
+                </div>
+                <div class="highlight">
+                    <div class="result-badge">67.1%</div>
+                    <div class="result-text">平均成功率 · 领先所有基线</div>
+                </div>
+                <div>
+                    <div class="stat-label">🥇 超越方法 (含更多数据)</div>
+                    <ul class="compare-list">
+                        <li>GR00T-N1.5 · UWM · UVA · Video Policy · FLARE · DP-VLA · π0</li>
+                    </ul>
+                </div>
+                <hr>
+                <div class="stat-value" style="color:#2e5c2a;">💡 数据效率突出：仅50个演示即超越数千演示的先前方法</div>
+            </div>
+        </div>
+
+        <!-- 右侧：真实世界实验 -->
+        <div class="right-panel">
+            <div class="section-title">
+                <i class="material-icons">precision_manufacturing</i>
+                真实世界实验
+            </div>
+
+            <!-- ALOHA 真机卡片 -->
+            <div class="card aloha">
+                <div class="card-header">🤝 ALOHA 真机任务</div>
+                <div class="stat-item">
+                    <div class="stat-label">📋 四项挑战性任务</div>
+                    <div class="stat-value">
+                        <span class="task-tag">🍗 put X on plate</span> (80 demos)<br>
+                        <span class="task-tag">👕 fold shirt</span> (15 demos)<br>
+                        <span class="task-tag">🍬 put candies in bowl</span> (45 demos)<br>
+                        <span class="task-tag">📦 put candy in ziploc bag</span> (45 demos)
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">🔬 评估协议</div>
+                    <div class="stat-value">101次总试验/方法 (分布内+OOD) · 0-100分制</div>
+                </div>
+                <div class="highlight">
+                    <div class="result-badge" style="color:#b4532e;">93.6</div>
+                    <div class="result-text">直接策略平均得分 · 最高综合性能</div>
+                </div>
+                <div>
+                    <div class="stat-label">📈 与SOTA对比 (平均分)</div>
+                    <ul class="compare-list">
+                        <li><strong>Cosmos Policy</strong> → <span class="score-highlight">93.6</span></li>
+                        <li>π0.5 → 88.6 &nbsp;|&nbsp; π0 → 77.9 &nbsp;|&nbsp; OpenVLA-OFT+ → 62.0</li>
+                    </ul>
+                </div>
+                <div class="realworld-stats">
+                    <div style="font-weight: 700;">🎯 关键指标 & 规划增益</div>
+                    <div>✔ 高难度任务显著优于VLA模型</div>
+                    <div>✔ <strong>模型规划 (Best-of-N+集成)</strong>：平均得分提升 <strong>+12.5分</strong></div>
+                    <div>✔ 世界模型+价值函数微调后，高精度抓取成功率大幅提升</div>
+                </div>
+            </div>
+
+            <!-- 规划策略亮点卡片 -->
+            <div class="card" style="background: #fefdf9;">
+                <div class="card-header">🧠 规划策略亮点</div>
+                <div class="stat-item">
+                    <div class="stat-label">🔁 双模型部署</div>
+                    <div class="stat-value">原始策略生成候选动作 + 规划模型预测未来状态/价值</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">⚡ Best-of-N采样</div>
+                    <div class="stat-value">N=8候选 → 世界模型3次 × 价值函数5次 → 15预测 → 多数平均聚合</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">📌 真实世界结果</div>
+                    <div class="stat-value">OOD条件下成功执行精确开袋与放置</div>
+                </div>
+                <hr>
+                <div class="stat-value">✅ 消融：去除预训练权重 → 成功率↓3.9%；去除辅助损失 → ↓1.5%</div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-line"></div>
+</section>
+
+</div>
+
+<script>
+    // 确保图片加载失败时显示占位符
+    (function() {
+        const images = document.querySelectorAll('.image-container img');
+        images.forEach(img => {
+            if (!img.complete || img.naturalWidth === 0) {
+                img.style.display = 'none';
+                const placeholder = img.nextElementSibling;
+                if (placeholder && placeholder.style.display === 'none') {
+                    placeholder.style.display = 'flex';
+                }
+            }
+            img.addEventListener('error', function() {
+                this.style.display = 'none';
+                const placeholder = this.nextElementSibling;
+                if (placeholder) {
+                    placeholder.style.display = 'flex';
+                }
+            });
+        });
+    })();
+</script>
+
+</body>
+</html>
